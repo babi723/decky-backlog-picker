@@ -6,9 +6,6 @@ import {
   ToggleField,
   SliderField,
   staticClasses,
-  Navigation,
-  Router,
-  ServerAPI,
 } from "@decky/ui";
 import { callable, toaster } from "@decky/api";
 import { useState, useEffect, useCallback, FC } from "react";
@@ -152,7 +149,7 @@ const GameCard: FC<{
         onClick={onLaunch}
         style={{ flex: 1, marginRight: "4px" }}
       >
-        <FaPlay style={{ marginRight: "6px" }} />
+        <span style={{ marginRight: "6px" }}><FaPlay /></span>
         Play Now
       </ButtonItem>
     </PanelSectionRow>
@@ -170,7 +167,7 @@ const GameCard: FC<{
         onClick={onBlacklist}
         style={{ color: "#e57373" }}
       >
-        <FaBan style={{ marginRight: "6px" }} />
+        <span style={{ marginRight: "6px" }}><FaBan /></span>
         Never Pick This
       </ButtonItem>
     </PanelSectionRow>
@@ -188,7 +185,7 @@ const EmptyState: FC<{ message: string }> = ({ message }) => (
       fontSize: "12px",
     }}
   >
-    <FaSteam style={{ fontSize: "32px", marginBottom: "8px", opacity: 0.4 }} />
+    <span style={{ fontSize: "32px", marginBottom: "8px", opacity: 0.4, display: "block" }}><FaSteam /></span>
     <div>{message}</div>
   </div>
 );
@@ -287,7 +284,7 @@ const Content: FC = () => {
             marginBottom: "4px",
           }}
         >
-          <FaDice style={{ fontSize: "20px", color: "#66c0f4" }} />
+          <span style={{ fontSize: "20px", color: "#66c0f4" }}><FaDice /></span>
           <span
             style={{ fontSize: "16px", fontWeight: "bold", color: "#c6d4df" }}
           >
