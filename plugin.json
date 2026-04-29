@@ -1,11 +1,8 @@
 {
-  "name": "Backlog Picker",
-  "author": "you",
-  "flags": [],
-  "license": "MIT",
-  "publish": {
-    "tags": ["utility", "library", "backlog"],
-    "description": "Can't decide what to play? Backlog Picker randomly selects a game from your Steam library with smart filters — installed only, never played, by playtime, and more.",
-    "image": "assets/preview.png"
-  }
+    "name": "Backlog Picker",
+    "version": "1.0.0",
+    "author": "babi723",
+    "flags": [],
+    "license": "MIT",
+    "api_version": 1
 }
