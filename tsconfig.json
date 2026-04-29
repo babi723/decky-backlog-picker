@@ -1,19 +1,17 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "module": "ESNext",
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM"],
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "outDir": "dist",
-    "paths": {
-      "@decky/ui": ["./node_modules/@decky/ui/dist/index.d.ts"]
-    }
-  },
-  "include": ["src"]
+    "compilerOptions": {
+          "baseUrl": ".",
+          "module": "ESNext",
+          "target": "ES2020",
+          "lib": ["ES2020", "DOM"],
+          "jsx": "react-jsx",
+          "strict": false,
+          "esModuleInterop": true,
+          "allowSyntheticDefaultImports": true,
+          "moduleResolution": "node",
+          "resolveJsonModule": true,
+          "outDir": "dist"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }
