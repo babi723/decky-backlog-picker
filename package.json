@@ -4,7 +4,9 @@
       "description": "Can't decide what to play? Let the Backlog Picker choose for you.",
       "scripts": {
             "build": "rollup -c",
-            "dev": "rollup -c -w"
+            "dev": "rollup -c -w",
+            "preview": "vite --config preview/vite.config.ts",
+            "preview:backend": "python3 preview/backend_server.py"
       },
       "peerDependencies": {
             "react": "^17.0.2",
@@ -18,9 +20,11 @@
             "@rollup/plugin-node-resolve": "^15.0.0",
             "@rollup/plugin-replace": "^5.0.0",
             "@rollup/plugin-typescript": "^11.0.0",
+            "@vitejs/plugin-react": "^4.7.0",
             "rollup": "^3.0.0",
             "tslib": "^2.0.0",
-            "typescript": "^5.0.0"
+            "typescript": "^5.0.0",
+            "vite": "^5.4.21"
       },
       "license": "MIT",
       "dependencies": {

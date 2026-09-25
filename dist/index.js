@@ -1,4 +1,4 @@
-(function (React, ui, api) {
+var BacklogPicker = (function (React, ui, _manifest) {
 	'use strict';
 
 	var jsxRuntime = {exports: {}};
@@ -128,6 +128,40 @@
 
 	var jsxRuntimeExports = jsxRuntime.exports;
 
+	const manifest = _manifest;
+	const API_VERSION = 2;
+	if (!manifest?.name) {
+	    throw new Error('[@decky/api]: Failed to find plugin manifest.');
+	}
+	const internalAPIConnection = window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit;
+	if (!internalAPIConnection) {
+	    throw new Error('[@decky/api]: Failed to connect to the loader as as the loader API was not initialized. This is likely a bug in Decky Loader.');
+	}
+	let api;
+	try {
+	    api = internalAPIConnection.connect(API_VERSION, manifest.name);
+	}
+	catch {
+	    api = internalAPIConnection.connect(1, manifest.name);
+	    console.warn(`[@decky/api] Requested API version ${API_VERSION} but the running loader only supports version 1. Some features may not work.`);
+	}
+	if (api._version != API_VERSION) {
+	    console.warn(`[@decky/api] Requested API version ${API_VERSION} but the running loader only supports version ${api._version}. Some features may not work.`);
+	}
+	api.call;
+	const callable = api.callable;
+	api.addEventListener;
+	api.removeEventListener;
+	api.routerHook;
+	const toaster = api.toaster;
+	api.openFilePicker;
+	api.executeInTab;
+	api.injectCssIntoTab;
+	api.removeCssFromTab;
+	api.fetchNoCors;
+	api.getExternalResourceURL;
+	api.useQuickAccessVisible;
+
 	var DefaultContext = {
 	  color: undefined,
 	  size: undefined,
@@ -188,21 +222,42 @@
 	// THIS FILE IS AUTO GENERATED
 	function FaSteam (props) {
 	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 496 512"},"child":[{"tag":"path","attr":{"d":"M496 256c0 137-111.2 248-248.4 248-113.8 0-209.6-76.3-239-180.4l95.2 39.3c6.4 32.1 34.9 56.4 68.9 56.4 39.2 0 71.9-32.4 70.2-73.5l84.5-60.2c52.1 1.3 95.8-40.9 95.8-93.5 0-51.6-42-93.5-93.7-93.5s-93.7 42-93.7 93.5v1.2L176.6 279c-15.5-.9-30.7 3.4-43.5 12.1L0 236.1C10.2 108.4 117.1 8 247.6 8 384.8 8 496 119 496 256zM155.7 384.3l-30.5-12.6a52.79 52.79 0 0 0 27.2 25.8c26.9 11.2 57.8-1.6 69-28.4 5.4-13 5.5-27.3.1-40.3-5.4-13-15.5-23.2-28.5-28.6-12.9-5.4-26.7-5.2-38.9-.6l31.5 13c19.8 8.2 29.2 30.9 20.9 50.7-8.3 19.9-31 29.2-50.8 21zm173.8-129.9c-34.4 0-62.4-28-62.4-62.3s28-62.3 62.4-62.3 62.4 28 62.4 62.3-27.9 62.3-62.4 62.3zm.1-15.6c25.9 0 46.9-21 46.9-46.8 0-25.9-21-46.8-46.9-46.8s-46.9 21-46.9 46.8c.1 25.8 21.1 46.8 46.9 46.8z"},"child":[]}]})(props);
+	}function FaSortAmountDown (props) {
+	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M304 416h-64a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm-128-64h-48V48a16 16 0 0 0-16-16H80a16 16 0 0 0-16 16v304H16c-14.19 0-21.37 17.24-11.29 27.31l80 96a16 16 0 0 0 22.62 0l80-96C197.35 369.26 190.22 352 176 352zm256-192H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h192a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm-64 128H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zM496 32H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h256a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"},"child":[]}]})(props);
 	}function FaPlay (props) {
 	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"},"child":[]}]})(props);
+	}function FaListUl (props) {
+	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"},"child":[]}]})(props);
 	}function FaDice (props) {
 	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 640 512"},"child":[{"tag":"path","attr":{"d":"M592 192H473.26c12.69 29.59 7.12 65.2-17 89.32L320 417.58V464c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48V240c0-26.51-21.49-48-48-48zM480 376c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm-46.37-186.7L258.7 14.37c-19.16-19.16-50.23-19.16-69.39 0L14.37 189.3c-19.16 19.16-19.16 50.23 0 69.39L189.3 433.63c19.16 19.16 50.23 19.16 69.39 0L433.63 258.7c19.16-19.17 19.16-50.24 0-69.4zM96 248c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm128 128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm0-128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm0-128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm128 128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"},"child":[]}]})(props);
+	}function FaClock (props) {
+	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M256,8C119,8,8,119,8,256S119,504,256,504,504,393,504,256,393,8,256,8Zm92.49,313h0l-20,25a16,16,0,0,1-22.49,2.5h0l-67-49.72a40,40,0,0,1-15-31.23V112a16,16,0,0,1,16-16h32a16,16,0,0,1,16,16V256l58,42.5A16,16,0,0,1,348.49,321Z"},"child":[]}]})(props);
+	}function FaCheck (props) {
+	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"},"child":[]}]})(props);
 	}function FaBan (props) {
 	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M256 8C119.034 8 8 119.033 8 256s111.034 248 248 248 248-111.034 248-248S392.967 8 256 8zm130.108 117.892c65.448 65.448 70 165.481 20.677 235.637L150.47 105.216c70.204-49.356 170.226-44.735 235.638 20.676zM125.892 386.108c-65.448-65.448-70-165.481-20.677-235.637L361.53 406.784c-70.203 49.356-170.226 44.736-235.638-20.676z"},"child":[]}]})(props);
+	}function FaArrowUp (props) {
+	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"},"child":[]}]})(props);
+	}function FaArrowDown (props) {
+	  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"},"child":[]}]})(props);
 	}
 
 	// ─── Backend callables ────────────────────────────────────────────────────────
-	const pickRandom = api.callable("pick_random");
-	const launchGame = api.callable("launch_game");
-	const addToBlacklist = api.callable("add_to_blacklist");
-	const removeFromBlacklist = api.callable("remove_from_blacklist");
-	const getBlacklist = api.callable("get_blacklist");
-	const getLibrary = api.callable("get_library");
+	const pickRandom = callable("pick_random");
+	const launchGame = callable("launch_game");
+	const addToBlacklist = callable("add_to_blacklist");
+	const removeFromBlacklist = callable("remove_from_blacklist");
+	const getBlacklist = callable("get_blacklist");
+	const getLibrary = callable("get_library");
+	const getCollections = callable("get_collections");
+	const refreshMetadata = callable("refresh_metadata");
+	const refreshHltb = callable("refresh_hltb");
+	const getOrder = callable("get_order");
+	const addToOrder = callable("add_to_order");
+	callable("remove_from_order");
+	const moveOrderItem = callable("move_order_item");
+	const setOrderStatus = callable("set_order_status");
+	const setOrderDeadline = callable("set_order_deadline");
 	// ─── Helpers ──────────────────────────────────────────────────────────────────
 	function formatPlaytime(hours) {
 	    if (hours === 0)
@@ -214,6 +269,78 @@
 	function getHeaderUrl(app_id) {
 	    return `https://cdn.akamai.steamstatic.com/steam/apps/${app_id}/header.jpg`;
 	}
+	function getCapsuleUrl(app_id) {
+	    return `https://cdn.akamai.steamstatic.com/steam/apps/${app_id}/capsule_184x69.jpg`;
+	}
+	const PROTON_TIER_RANK = {
+	    Platinum: 0,
+	    Gold: 1,
+	    Silver: 2,
+	    Bronze: 3,
+	    Native: 4,
+	    Pending: 5,
+	    Borked: 6,
+	};
+	function protonTierRank(tier) {
+	    if (!tier)
+	        return 99; // Unknown sorts last
+	    return PROTON_TIER_RANK[tier] ?? 98;
+	}
+	const PROTON_TIER_COLORS = {
+	    Platinum: "#b0c4de",
+	    Gold: "#ffd700",
+	    Silver: "#c0c0c0",
+	    Bronze: "#cd7f32",
+	    Borked: "#e57373",
+	    Pending: "#8b9ba8",
+	    Native: "#4caf50",
+	};
+	const ProtonBadge = ({ tier }) => {
+	    const label = tier || "Unknown";
+	    const color = tier ? PROTON_TIER_COLORS[tier] || "#8b9ba8" : "#8b9ba8";
+	    return (jsxRuntimeExports.jsx("span", { style: {
+	            fontSize: "10px",
+	            color,
+	            border: `1px solid ${color}`,
+	            borderRadius: "4px",
+	            padding: "1px 5px",
+	            marginLeft: "6px",
+	        }, children: label }));
+	};
+	function formatDeadline(deadline) {
+	    if (!deadline)
+	        return null;
+	    const due = new Date(deadline);
+	    if (isNaN(due.getTime()))
+	        return null;
+	    const now = new Date();
+	    const msPerDay = 24 * 60 * 60 * 1000;
+	    const daysLeft = Math.ceil((due.getTime() - now.getTime()) / msPerDay);
+	    if (daysLeft < 0)
+	        return { text: "Overdue", overdue: true };
+	    if (daysLeft === 0)
+	        return { text: "Due today", overdue: false };
+	    if (daysLeft === 1)
+	        return { text: "Due tomorrow", overdue: false };
+	    return { text: `${daysLeft} days left`, overdue: false };
+	}
+	function formatRemaining(item) {
+	    if (item.reached_estimate)
+	        return "Main story estimate reached";
+	    if (item.remaining_hours != null)
+	        return `~${item.remaining_hours}h remaining`;
+	    return "HLTB: Unknown";
+	}
+	function isoDateInDays(days) {
+	    const d = new Date();
+	    d.setDate(d.getDate() + days);
+	    return d.toISOString().slice(0, 10);
+	}
+	function endOfMonthIso() {
+	    const now = new Date();
+	    const d = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+	    return d.toISOString().slice(0, 10);
+	}
 	// ─── Spin animation component ─────────────────────────────────────────────────
 	const SpinningDice = ({ spinning }) => (jsxRuntimeExports.jsxs("div", { style: {
 	        display: "inline-block",
@@ -224,8 +351,30 @@
         to { transform: rotate(360deg); }
       }
     ` })] }));
+	const TabNav = ({ active, onChange }) => {
+	    const tabs = [
+	        { id: "pick", label: "Pick", icon: jsxRuntimeExports.jsx(FaDice, {}) },
+	        { id: "library", label: "Library", icon: jsxRuntimeExports.jsx(FaListUl, {}) },
+	        { id: "order", label: "Order", icon: jsxRuntimeExports.jsx(FaSortAmountDown, {}) },
+	    ];
+	    return (jsxRuntimeExports.jsx(ui.Focusable, { style: {
+	            display: "flex",
+	            gap: "6px",
+	            padding: "0 4px 8px 4px",
+	        }, "flow-children": "horizontal", children: tabs.map((t) => (jsxRuntimeExports.jsxs("div", { onClick: () => onChange(t.id), style: {
+	                flex: 1,
+	                textAlign: "center",
+	                padding: "10px 4px",
+	                borderRadius: "6px",
+	                fontSize: "12px",
+	                fontWeight: "bold",
+	                cursor: "pointer",
+	                background: active === t.id ? "#66c0f4" : "#2a2f37",
+	                color: active === t.id ? "#0e141b" : "#c6d4df",
+	            }, children: [jsxRuntimeExports.jsx("div", { style: { fontSize: "14px", marginBottom: "2px" }, children: t.icon }), t.label] }, t.id))) }));
+	};
 	// ─── Picked game card ─────────────────────────────────────────────────────────
-	const GameCard = ({ game, onReroll, onLaunch, onBlacklist, loading }) => (jsxRuntimeExports.jsxs("div", { style: { marginTop: "8px" }, children: [jsxRuntimeExports.jsx("div", { style: {
+	const GameCard = ({ game, onReroll, onLaunch, onBlacklist, onAddToOrder, loading }) => (jsxRuntimeExports.jsxs("div", { style: { marginTop: "8px" }, children: [jsxRuntimeExports.jsx("div", { style: {
 	                position: "relative",
 	                borderRadius: "8px",
 	                overflow: "hidden",
@@ -249,36 +398,44 @@
 	                        overflow: "hidden",
 	                        textOverflow: "ellipsis",
 	                        whiteSpace: "nowrap",
-	                    }, children: game.name }), jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8" }, children: [formatPlaytime(game.playtime_hours), game.is_installed && (jsxRuntimeExports.jsx("span", { style: {
+	                    }, children: game.name }), jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8", display: "flex", alignItems: "center" }, children: [formatPlaytime(game.playtime_hours), game.is_installed && (jsxRuntimeExports.jsx("span", { style: {
 	                                marginLeft: "8px",
 	                                color: "#4caf50",
 	                                fontSize: "10px",
-	                            }, children: "\u25CF Installed" }))] })] }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onLaunch, style: { flex: 1, marginRight: "4px" }, children: [jsxRuntimeExports.jsx(FaPlay, { style: { marginRight: "6px" } }), "Play Now"] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onReroll, disabled: loading, children: [jsxRuntimeExports.jsx(SpinningDice, { spinning: loading }), jsxRuntimeExports.jsx("span", { style: { marginLeft: "6px" }, children: "Reroll" })] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onBlacklist, style: { color: "#e57373" }, children: [jsxRuntimeExports.jsx(FaBan, { style: { marginRight: "6px" } }), "Never Pick This"] }) })] }));
+	                            }, children: "\u25CF Installed" })), jsxRuntimeExports.jsx(ProtonBadge, { tier: game.proton_tier })] })] }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onLaunch, style: { flex: 1, marginRight: "4px" }, children: [jsxRuntimeExports.jsx("span", { style: { marginRight: "6px" }, children: jsxRuntimeExports.jsx(FaPlay, {}) }), "Play Now"] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onReroll, disabled: loading, children: [jsxRuntimeExports.jsx(SpinningDice, { spinning: loading }), jsxRuntimeExports.jsx("span", { style: { marginLeft: "6px" }, children: "Reroll" })] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onAddToOrder, children: [jsxRuntimeExports.jsx("span", { style: { marginRight: "6px" }, children: jsxRuntimeExports.jsx(FaSortAmountDown, {}) }), game.order_position != null ? `In Order #${game.order_position + 1}` : "Add to Order"] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onBlacklist, style: { color: "#e57373" }, children: [jsxRuntimeExports.jsx("span", { style: { marginRight: "6px" }, children: jsxRuntimeExports.jsx(FaBan, {}) }), "Never Pick This"] }) })] }));
 	// ─── Empty state ──────────────────────────────────────────────────────────────
 	const EmptyState = ({ message }) => (jsxRuntimeExports.jsxs("div", { style: {
 	        textAlign: "center",
 	        padding: "24px 16px",
 	        color: "#8b9ba8",
 	        fontSize: "12px",
-	    }, children: [jsxRuntimeExports.jsx(FaSteam, { style: { fontSize: "32px", marginBottom: "8px", opacity: 0.4 } }), jsxRuntimeExports.jsx("div", { children: message })] }));
-	// ─── Main plugin content ──────────────────────────────────────────────────────
-	const Content = () => {
+	    }, children: [jsxRuntimeExports.jsx("span", { style: { fontSize: "32px", marginBottom: "8px", opacity: 0.4, display: "block" }, children: jsxRuntimeExports.jsx(FaSteam, {}) }), jsxRuntimeExports.jsx("div", { children: message })] }));
+	// ─── Pick tab ───────────────────────────────────────────────────────────────
+	const PROTON_FILTER_OPTIONS = [
+	    { data: "any", label: "Any" },
+	    { data: "gold_plus", label: "Gold+" },
+	    { data: "platinum_only", label: "Platinum Only" },
+	];
+	const PickTab = () => {
 	    const [filters, setFilters] = React.useState({
 	        installed_only: true,
 	        never_played: false,
 	        max_playtime_hours: 0,
 	        min_playtime_hours: 0,
 	        blacklist: [],
+	        proton_filter: "gold_plus",
+	        collection_id: null,
 	    });
 	    const [pickedGame, setPickedGame] = React.useState(null);
 	    const [loading, setLoading] = React.useState(false);
 	    const [libraryCount, setLibraryCount] = React.useState(null);
-	    React.useState(false);
-	    // Load blacklist on mount
+	    const [collections, setCollections] = React.useState([]);
+	    // Load blacklist + collections on mount
 	    React.useEffect(() => {
 	        getBlacklist().then((bl) => {
 	            setFilters((f) => ({ ...f, blacklist: bl }));
 	        });
+	        getCollections().then(setCollections);
 	    }, []);
 	    // Refresh library count when filters change
 	    React.useEffect(() => {
@@ -297,7 +454,7 @@
 	                setPickedGame(game);
 	            }
 	            else {
-	                api.toaster.toast({
+	                toaster.toast({
 	                    title: "Backlog Picker",
 	                    body: "No games found matching your filters!",
 	                    duration: 3000,
@@ -305,7 +462,7 @@
 	            }
 	        }
 	        catch (e) {
-	            api.toaster.toast({
+	            toaster.toast({
 	                title: "Backlog Picker",
 	                body: "Something went wrong. Check logs.",
 	                duration: 3000,
@@ -317,7 +474,7 @@
 	        if (!pickedGame)
 	            return;
 	        await launchGame(pickedGame.app_id);
-	        api.toaster.toast({
+	        toaster.toast({
 	            title: "Backlog Picker",
 	            body: `Launching ${pickedGame.name}...`,
 	            duration: 2000,
@@ -327,7 +484,7 @@
 	        if (!pickedGame)
 	            return;
 	        await addToBlacklist(pickedGame.app_id);
-	        api.toaster.toast({
+	        toaster.toast({
 	            title: "Backlog Picker",
 	            body: `"${pickedGame.name}" will never be picked again.`,
 	            duration: 3000,
@@ -340,12 +497,28 @@
 	        // Auto-pick a new one
 	        handlePick();
 	    }, [pickedGame, handlePick]);
+	    const handleAddToOrder = React.useCallback(async () => {
+	        if (!pickedGame)
+	            return;
+	        const added = await addToOrder(pickedGame.app_id);
+	        toaster.toast({
+	            title: "Backlog Picker",
+	            body: added ? `"${pickedGame.name}" added to your order.` : `Already in your order.`,
+	            duration: 2500,
+	        });
+	        if (added) {
+	            const games = await getLibrary(filters);
+	            const updated = games.find((g) => g.app_id === pickedGame.app_id);
+	            if (updated)
+	                setPickedGame(updated);
+	        }
+	    }, [pickedGame, filters]);
 	    return (jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsxs(ui.PanelSection, { children: [jsxRuntimeExports.jsxs("div", { style: {
 	                            display: "flex",
 	                            alignItems: "center",
 	                            gap: "8px",
 	                            marginBottom: "4px",
-	                        }, children: [jsxRuntimeExports.jsx(FaDice, { style: { fontSize: "20px", color: "#66c0f4" } }), jsxRuntimeExports.jsx("span", { style: { fontSize: "16px", fontWeight: "bold", color: "#c6d4df" }, children: "Backlog Picker" })] }), libraryCount !== null && (jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8" }, children: [libraryCount, " game", libraryCount !== 1 ? "s" : "", " in pool"] }))] }), jsxRuntimeExports.jsxs(ui.PanelSection, { children: [jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: handlePick, disabled: loading, children: [jsxRuntimeExports.jsx(SpinningDice, { spinning: loading }), jsxRuntimeExports.jsx("span", { style: { marginLeft: "8px", fontSize: "14px" }, children: loading ? "Picking..." : pickedGame ? "Pick Again" : "Pick For Me!" })] }) }), pickedGame && !loading && (jsxRuntimeExports.jsx(GameCard, { game: pickedGame, onReroll: handlePick, onLaunch: handleLaunch, onBlacklist: handleBlacklist, loading: loading })), !pickedGame && !loading && (jsxRuntimeExports.jsx(EmptyState, { message: "Hit the button and let fate decide what you play next!" }))] }), jsxRuntimeExports.jsxs(ui.PanelSection, { title: "Filters", children: [jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.ToggleField, { label: "Installed Games Only", description: "Only pick games you can play right now", checked: filters.installed_only, onChange: (v) => setFilters((f) => ({ ...f, installed_only: v })) }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.ToggleField, { label: "Never Played Only", description: "Only pick games with 0 hours", checked: filters.never_played, onChange: (v) => setFilters((f) => ({
+	                        }, children: [jsxRuntimeExports.jsx("span", { style: { fontSize: "20px", color: "#66c0f4" }, children: jsxRuntimeExports.jsx(FaDice, {}) }), jsxRuntimeExports.jsx("span", { style: { fontSize: "16px", fontWeight: "bold", color: "#c6d4df" }, children: "Backlog Picker" })] }), libraryCount !== null && (jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8" }, children: [libraryCount, " game", libraryCount !== 1 ? "s" : "", " in pool"] }))] }), jsxRuntimeExports.jsxs(ui.PanelSection, { children: [jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: handlePick, disabled: loading, children: [jsxRuntimeExports.jsx(SpinningDice, { spinning: loading }), jsxRuntimeExports.jsx("span", { style: { marginLeft: "8px", fontSize: "14px" }, children: loading ? "Picking..." : pickedGame ? "Pick Again" : "Pick For Me!" })] }) }), pickedGame && !loading && (jsxRuntimeExports.jsx(GameCard, { game: pickedGame, onReroll: handlePick, onLaunch: handleLaunch, onBlacklist: handleBlacklist, onAddToOrder: handleAddToOrder, loading: loading })), !pickedGame && !loading && (jsxRuntimeExports.jsx(EmptyState, { message: "Hit the button and let fate decide what you play next!" }))] }), jsxRuntimeExports.jsxs(ui.PanelSection, { title: "Filters", children: [jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.ToggleField, { label: "Installed Games Only", description: "Only pick games you can play right now", checked: filters.installed_only, onChange: (v) => setFilters((f) => ({ ...f, installed_only: v })) }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.ToggleField, { label: "Never Played Only", description: "Only pick games with 0 hours", checked: filters.never_played, onChange: (v) => setFilters((f) => ({
 	                                ...f,
 	                                never_played: v,
 	                                // Reset playtime filters if switching to never played
@@ -353,19 +526,212 @@
 	                                min_playtime_hours: v ? 0 : f.min_playtime_hours,
 	                            })) }) }), !filters.never_played && (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.SliderField, { label: "Max Playtime", description: filters.max_playtime_hours === 0
 	                                        ? "No limit"
-	                                        : `Up to ${filters.max_playtime_hours}h played`, value: filters.max_playtime_hours, min: 0, max: 100, step: 5, onChange: (v) => setFilters((f) => ({ ...f, max_playtime_hours: v })) }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.SliderField, { label: "Min Playtime", description: filters.min_playtime_hours === 0
+	                                        : `Up to ${filters.max_playtime_hours}h played`, value: filters.max_playtime_hours, min: 0, max: 100, step: 1, onChange: (v) => setFilters((f) => ({ ...f, max_playtime_hours: v })) }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.SliderField, { label: "Min Playtime", description: filters.min_playtime_hours === 0
 	                                        ? "No minimum"
-	                                        : `At least ${filters.min_playtime_hours}h played`, value: filters.min_playtime_hours, min: 0, max: 100, step: 5, onChange: (v) => setFilters((f) => ({ ...f, min_playtime_hours: v })) }) })] }))] }), filters.blacklist.length > 0 && (jsxRuntimeExports.jsx(ui.PanelSection, { title: `Blacklist (${filters.blacklist.length})`, children: jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: async () => {
+	                                        : `At least ${filters.min_playtime_hours}h played`, value: filters.min_playtime_hours, min: 0, max: 100, step: 1, onChange: (v) => setFilters((f) => ({ ...f, min_playtime_hours: v })) }) })] })), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.DropdownItem, { label: "ProtonDB Filter", description: "Only pick games that run well on Deck", rgOptions: PROTON_FILTER_OPTIONS.map((o) => ({ data: o.data, label: o.label })), selectedOption: filters.proton_filter, onChange: (o) => setFilters((f) => ({ ...f, proton_filter: o.data })) }) }), collections.length > 0 && (jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.DropdownItem, { label: "Collection", description: "Only pick from one of your Steam collections", rgOptions: [
+	                                { data: null, label: "All Collections" },
+	                                ...collections.map((c) => ({ data: c.id, label: `${c.name} (${c.count})` })),
+	                            ], selectedOption: filters.collection_id ?? null, onChange: (o) => setFilters((f) => ({ ...f, collection_id: o.data })) }) }))] }), filters.blacklist.length > 0 && (jsxRuntimeExports.jsx(ui.PanelSection, { title: `Blacklist (${filters.blacklist.length})`, children: jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: async () => {
 	                            for (const id of filters.blacklist) {
 	                                await removeFromBlacklist(id);
 	                            }
 	                            setFilters((f) => ({ ...f, blacklist: [] }));
-	                            api.toaster.toast({
+	                            toaster.toast({
 	                                title: "Backlog Picker",
 	                                body: "Blacklist cleared!",
 	                                duration: 2000,
 	                            });
 	                        }, style: { color: "#e57373" }, children: "Clear Blacklist" }) }) }))] }));
+	};
+	// ─── Library tab ────────────────────────────────────────────────────────────
+	const LIBRARY_BASE_FILTERS = {
+	    never_played: false,
+	    max_playtime_hours: 0,
+	    min_playtime_hours: 0,
+	    blacklist: [],
+	    proton_filter: "any",
+	};
+	const LibraryTab = () => {
+	    const [installedOnly, setInstalledOnly] = React.useState(true);
+	    const [collectionId, setCollectionId] = React.useState(null);
+	    const [collections, setCollections] = React.useState([]);
+	    const [games, setGames] = React.useState([]);
+	    const [loading, setLoading] = React.useState(true);
+	    React.useEffect(() => {
+	        getCollections().then(setCollections);
+	    }, []);
+	    const load = React.useCallback(async () => {
+	        setLoading(true);
+	        const bl = await getBlacklist();
+	        const filters = {
+	            ...LIBRARY_BASE_FILTERS,
+	            installed_only: installedOnly,
+	            collection_id: collectionId,
+	            blacklist: bl,
+	        };
+	        const list = await getLibrary(filters);
+	        setGames(list);
+	        setLoading(false);
+	        // Warm the ProtonDB + HLTB caches for what's visible, then refresh once done.
+	        Promise.all([
+	            refreshMetadata(list.map((g) => g.app_id)),
+	            refreshHltb(list.map((g) => ({ app_id: g.app_id, name: g.name }))),
+	        ]).then(async () => {
+	            const refreshed = await getLibrary(filters);
+	            setGames(refreshed);
+	        });
+	    }, [installedOnly, collectionId]);
+	    React.useEffect(() => {
+	        load();
+	    }, [load]);
+	    // In the "All" scope the list is large and unsorted (raw Steam order), so
+	    // rank by ProtonDB compatibility to surface the games worth playing on Deck.
+	    // The small "Installed" list keeps its natural order.
+	    const displayedGames = React.useMemo(() => {
+	        if (installedOnly)
+	            return games;
+	        return [...games].sort((a, b) => protonTierRank(a.proton_tier) - protonTierRank(b.proton_tier));
+	    }, [games, installedOnly]);
+	    const handleAddToOrder = React.useCallback(async (game) => {
+	        const added = await addToOrder(game.app_id);
+	        toaster.toast({
+	            title: "Backlog Picker",
+	            body: added ? `"${game.name}" added to your order.` : "Already in your order.",
+	            duration: 2500,
+	        });
+	        if (added)
+	            load();
+	    }, [load]);
+	    const scopeToggle = (jsxRuntimeExports.jsxs(ui.Focusable, { style: { display: "flex", gap: "6px", padding: "0 4px 8px 4px" }, "flow-children": "horizontal", children: [jsxRuntimeExports.jsx("div", { style: { flex: 1 }, children: jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: () => setInstalledOnly(true), style: {
+	                        background: installedOnly ? "#66c0f4" : "#2a2f37",
+	                        color: installedOnly ? "#0e141b" : "#c6d4df",
+	                    }, children: "Installed" }) }), jsxRuntimeExports.jsx("div", { style: { flex: 1 }, children: jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: () => setInstalledOnly(false), style: {
+	                        background: !installedOnly ? "#66c0f4" : "#2a2f37",
+	                        color: !installedOnly ? "#0e141b" : "#c6d4df",
+	                    }, children: "All" }) })] }));
+	    const collectionFilter = collections.length > 0 && (jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.DropdownItem, { label: "Collection", rgOptions: [
+	                { data: null, label: "All Collections" },
+	                ...collections.map((c) => ({ data: c.id, label: `${c.name} (${c.count})` })),
+	            ], selectedOption: collectionId, onChange: (o) => setCollectionId(o.data) }) }));
+	    const header = (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [scopeToggle, collectionFilter] }));
+	    if (loading && games.length === 0) {
+	        return (jsxRuntimeExports.jsxs("div", { children: [header, jsxRuntimeExports.jsx(EmptyState, { message: "Loading your library..." })] }));
+	    }
+	    if (games.length === 0) {
+	        return (jsxRuntimeExports.jsxs("div", { children: [header, jsxRuntimeExports.jsx(EmptyState, { message: installedOnly ? "No installed games found." : "No games found." })] }));
+	    }
+	    return (jsxRuntimeExports.jsxs("div", { children: [header, jsxRuntimeExports.jsx(ui.PanelSection, { title: `Library (${games.length})`, children: displayedGames.map((game) => (jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs("div", { style: { width: "100%", padding: "4px 0" }, children: [jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: "8px", marginBottom: "6px" }, children: [jsxRuntimeExports.jsx("img", { src: getCapsuleUrl(game.app_id), onError: (e) => {
+	                                            e.target.style.display = "none";
+	                                        }, style: {
+	                                            width: "64px",
+	                                            height: "24px",
+	                                            objectFit: "cover",
+	                                            borderRadius: "4px",
+	                                            flexShrink: 0,
+	                                            background: "#1a1a2e",
+	                                        }, alt: "" }), jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center" }, children: [jsxRuntimeExports.jsx("span", { style: {
+	                                                            fontSize: "13px",
+	                                                            fontWeight: "bold",
+	                                                            color: "#c6d4df",
+	                                                            overflow: "hidden",
+	                                                            textOverflow: "ellipsis",
+	                                                            whiteSpace: "nowrap",
+	                                                            flex: 1,
+	                                                        }, children: game.name }), jsxRuntimeExports.jsx(ProtonBadge, { tier: game.proton_tier })] }), jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8" }, children: [formatPlaytime(game.playtime_hours), jsxRuntimeExports.jsx("span", { style: { marginLeft: "8px" }, children: game.hltb_main_story_hours != null
+	                                                            ? `HLTB: ${game.hltb_main_story_hours}h`
+	                                                            : "HLTB: Unknown" })] })] })] }), jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: () => handleAddToOrder(game), children: game.order_position != null ? `In Order #${game.order_position + 1}` : "Add to Order" })] }) }, game.app_id))) })] }));
+	};
+	// ─── Order tab ──────────────────────────────────────────────────────────────
+	const DEADLINE_OPTIONS = [
+	    { label: "1 Week", value: isoDateInDays(7) },
+	    { label: "2 Weeks", value: isoDateInDays(14) },
+	    { label: "This Month", value: endOfMonthIso() },
+	    { label: "No Deadline", value: null },
+	];
+	const STATUS_LABEL = {
+	    playing: "Playing",
+	    queued: "Queued",
+	    completed: "Completed",
+	};
+	const OrderRow = ({ item, index, isFirst, isLast, onMove, onLaunch, onComplete, onSetDeadline }) => {
+	    const deadlineInfo = formatDeadline(item.deadline);
+	    const primary = item.status === "playing";
+	    return (jsxRuntimeExports.jsxs("div", { style: {
+	            padding: "8px 4px",
+	            marginBottom: "6px",
+	            borderRadius: "6px",
+	            background: primary ? "#1e2b38" : "transparent",
+	            borderLeft: primary ? "3px solid #66c0f4" : "3px solid transparent",
+	        }, children: [jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: "8px", marginBottom: "4px" }, children: [jsxRuntimeExports.jsx("img", { src: getCapsuleUrl(item.app_id), onError: (e) => {
+	                            e.target.style.display = "none";
+	                        }, style: {
+	                            width: "64px",
+	                            height: "24px",
+	                            objectFit: "cover",
+	                            borderRadius: "4px",
+	                            flexShrink: 0,
+	                            background: "#1a1a2e",
+	                        }, alt: "" }), jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center" }, children: [jsxRuntimeExports.jsxs("span", { style: {
+	                                            fontSize: primary ? "14px" : "12px",
+	                                            fontWeight: "bold",
+	                                            color: "#c6d4df",
+	                                            flex: 1,
+	                                            overflow: "hidden",
+	                                            textOverflow: "ellipsis",
+	                                            whiteSpace: "nowrap",
+	                                        }, children: [index + 1, ". ", item.name] }), jsxRuntimeExports.jsx(ProtonBadge, { tier: item.proton_tier })] }), jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8" }, children: [STATUS_LABEL[item.status], " \u00B7 ", formatPlaytime(item.playtime_hours), item.status !== "completed" && jsxRuntimeExports.jsxs("span", { children: [" \u00B7 ", formatRemaining(item)] }), deadlineInfo && (jsxRuntimeExports.jsxs("span", { style: { marginLeft: "8px", color: deadlineInfo.overdue ? "#e57373" : "#8b9ba8" }, children: [jsxRuntimeExports.jsx("span", { style: { marginRight: "3px" }, children: jsxRuntimeExports.jsx(FaClock, {}) }), deadlineInfo.text] }))] })] })] }), item.status !== "completed" && (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onLaunch, children: [jsxRuntimeExports.jsx("span", { style: { marginRight: "6px" }, children: jsxRuntimeExports.jsx(FaPlay, {}) }), "Launch"] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs(ui.ButtonItem, { layout: "below", onClick: onComplete, children: [jsxRuntimeExports.jsx("span", { style: { marginRight: "6px" }, children: jsxRuntimeExports.jsx(FaCheck, {}) }), "Mark Completed"] }) }), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(ui.DropdownItem, { label: "Deadline", rgOptions: DEADLINE_OPTIONS.map((o) => ({ data: o.value, label: o.label })), selectedOption: item.deadline ?? null, onChange: (o) => onSetDeadline(o.data) }) })] })), jsxRuntimeExports.jsxs(ui.Focusable, { style: { display: "flex", gap: "6px" }, "flow-children": "horizontal", children: [jsxRuntimeExports.jsx("div", { style: { flex: 1 }, children: jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: () => onMove("up"), disabled: isFirst, children: jsxRuntimeExports.jsx(FaArrowUp, {}) }) }), jsxRuntimeExports.jsx("div", { style: { flex: 1 }, children: jsxRuntimeExports.jsx(ui.ButtonItem, { layout: "below", onClick: () => onMove("down"), disabled: isLast, children: jsxRuntimeExports.jsx(FaArrowDown, {}) }) })] })] }));
+	};
+	const OrderTab = () => {
+	    const [order, setOrder] = React.useState([]);
+	    const [loading, setLoading] = React.useState(true);
+	    const load = React.useCallback(async () => {
+	        const list = await getOrder();
+	        setOrder(list);
+	        setLoading(false);
+	        // Warm the HLTB cache for what's in the order, then refresh once done.
+	        const unknown = list.filter((i) => i.hltb_main_story_hours == null);
+	        if (unknown.length > 0) {
+	            refreshHltb(unknown.map((i) => ({ app_id: i.app_id, name: i.name }))).then(async () => {
+	                setOrder(await getOrder());
+	            });
+	        }
+	    }, []);
+	    React.useEffect(() => {
+	        load();
+	    }, [load]);
+	    const handleMove = React.useCallback(async (app_id, dir) => {
+	        await moveOrderItem(app_id, dir);
+	        load();
+	    }, [load]);
+	    const handleLaunch = React.useCallback(async (item) => {
+	        await launchGame(item.app_id);
+	        toaster.toast({ title: "Backlog Picker", body: `Launching ${item.name}...`, duration: 2000 });
+	    }, []);
+	    const handleComplete = React.useCallback(async (item) => {
+	        await setOrderStatus(item.app_id, "completed");
+	        toaster.toast({ title: "Backlog Picker", body: `"${item.name}" marked completed!`, duration: 2500 });
+	        load();
+	    }, [load]);
+	    const handleDeadline = React.useCallback(async (app_id, deadline) => {
+	        await setOrderDeadline(app_id, deadline);
+	        load();
+	    }, [load]);
+	    if (loading) {
+	        return jsxRuntimeExports.jsx(EmptyState, { message: "Loading your order..." });
+	    }
+	    if (order.length === 0) {
+	        return jsxRuntimeExports.jsx(EmptyState, { message: "Your backlog order is empty. Add games from the Library tab." });
+	    }
+	    const activeItems = order.filter((i) => i.status !== "completed");
+	    const totalRemaining = activeItems.length;
+	    const knownRemaining = activeItems.filter((i) => i.remaining_hours != null);
+	    const totalHours = knownRemaining.reduce((sum, i) => sum + (i.remaining_hours || 0), 0);
+	    return (jsxRuntimeExports.jsxs(ui.PanelSection, { title: "My Order", children: [order.map((item, idx) => (jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsx(OrderRow, { item: item, index: idx, isFirst: idx === 0, isLast: idx === order.length - 1, onMove: (dir) => handleMove(item.app_id, dir), onLaunch: () => handleLaunch(item), onComplete: () => handleComplete(item), onSetDeadline: (d) => handleDeadline(item.app_id, d) }) }, item.app_id))), jsxRuntimeExports.jsx(ui.PanelSectionRow, { children: jsxRuntimeExports.jsxs("div", { style: { fontSize: "11px", color: "#8b9ba8", textAlign: "center", padding: "4px" }, children: [totalRemaining, " game", totalRemaining !== 1 ? "s" : "", " remaining", knownRemaining.length > 0 && jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [" \u00B7 ~", totalHours.toFixed(0), " hours remaining"] })] }) })] }));
+	};
+	// ─── Main plugin content ──────────────────────────────────────────────────────
+	const Content = () => {
+	    const [activeTab, setActiveTab] = React.useState("pick");
+	    return (jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx(TabNav, { active: activeTab, onChange: setActiveTab }), activeTab === "pick" && jsxRuntimeExports.jsx(PickTab, {}), activeTab === "library" && jsxRuntimeExports.jsx(LibraryTab, {}), activeTab === "order" && jsxRuntimeExports.jsx(OrderTab, {})] }));
 	};
 	// ─── Plugin entry point ───────────────────────────────────────────────────────
 	var index = ui.definePlugin(() => {
@@ -379,4 +745,4 @@
 
 	return index;
 
-})(SP_REACT, DFL, DeckyAPI);
+})(SP_REACT, DFL, DeckyPluginManifest);
