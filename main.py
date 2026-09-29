@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import struct
 import subprocess
 import logging
 import time
@@ -318,6 +319,178 @@ def is_non_game_tool(name: str) -> bool:
     return any(name.startswith(prefix) for prefix in _NON_GAME_NAME_PREFIXES)
 
 
+# ─── appinfo.vdf (names for non-installed games) ───────────────────────────
+#
+# get_game_name_from_manifest() only works for installed games (it reads
+# appmanifest_*.acf, which only exists once a game is installed). Games
+# found via a Steam collection or the "All" library scope but not installed
+# otherwise show up as "App <id>". Steam separately maintains a local cache
+# of metadata (including names) for every app it has ever shown the user —
+# <steam_path>/appcache/appinfo.vdf — a binary KeyValues format, needing no
+# Steam Web API key. This format is undocumented/reverse-engineered (fields
+# verified by hand against a real local file) and may change between Steam
+# client versions; failures degrade to no name (falls back to "App <id>")
+# rather than breaking the plugin.
+
+_APPINFO_TYPE_NONE = 0x00
+_APPINFO_TYPE_STRING = 0x01
+_APPINFO_TYPE_INT32 = 0x02
+_APPINFO_TYPE_FLOAT32 = 0x03
+_APPINFO_TYPE_POINTER = 0x04
+_APPINFO_TYPE_WIDESTRING = 0x05
+_APPINFO_TYPE_COLOR = 0x06
+_APPINFO_TYPE_UINT64 = 0x07
+_APPINFO_TYPE_END = 0x08
+_APPINFO_TYPE_INT64 = 0x0A
+
+_APPINFO_MAGICS = (0x07564427, 0x07564428, 0x07564429)
+
+# Per-entry header (state + last_updated + access_token + hash(es) +
+# change_number) length in bytes, before the binary KeyValues tree starts.
+# Varies slightly across Steam client format revisions; 60 is current as of
+# writing. Tried in order per entry; whichever fully parses the entry's KV
+# tree and lands exactly on that entry's known end offset is correct.
+_APPINFO_HEADER_LEN_CANDIDATES = (60, 40, 68, 44, 48, 52, 56, 64)
+
+
+def _appinfo_read_cstring(buf: bytes, offset: int) -> tuple[str, int]:
+    end = buf.index(b"\x00", offset)
+    return buf[offset:end].decode("utf-8", errors="replace"), end + 1
+
+
+def _appinfo_parse_kv_object(buf: bytes, offset: int, strings: list[str]) -> tuple[dict, int]:
+    """Parse one binary KeyValues object. Keys are indices into `strings`
+    (a shared string table); string values remain inline/null-terminated."""
+    result: dict[str, Any] = {}
+    while True:
+        type_byte = buf[offset]
+        offset += 1
+        if type_byte == _APPINFO_TYPE_END:
+            return result, offset
+
+        key_index = struct.unpack_from("<I", buf, offset)[0]
+        offset += 4
+        if key_index >= len(strings):
+            raise ValueError(f"key index {key_index} out of range")
+        key = strings[key_index]
+
+        if type_byte == _APPINFO_TYPE_NONE:
+            value, offset = _appinfo_parse_kv_object(buf, offset, strings)
+        elif type_byte in (_APPINFO_TYPE_STRING, _APPINFO_TYPE_WIDESTRING):
+            value, offset = _appinfo_read_cstring(buf, offset)
+        elif type_byte in (_APPINFO_TYPE_INT32, _APPINFO_TYPE_COLOR, _APPINFO_TYPE_POINTER):
+            value = struct.unpack_from("<i", buf, offset)[0]
+            offset += 4
+        elif type_byte == _APPINFO_TYPE_FLOAT32:
+            value = struct.unpack_from("<f", buf, offset)[0]
+            offset += 4
+        elif type_byte == _APPINFO_TYPE_UINT64:
+            value = struct.unpack_from("<Q", buf, offset)[0]
+            offset += 8
+        elif type_byte == _APPINFO_TYPE_INT64:
+            value = struct.unpack_from("<q", buf, offset)[0]
+            offset += 8
+        else:
+            raise ValueError(f"unknown KV type byte {type_byte:#x}")
+
+        result[key] = value
+
+
+def _appinfo_load_string_table(buf: bytes) -> tuple[list[str], int]:
+    """Skip past all app entries (using each entry's size field) to reach
+    the trailing string table, then parse it. Returns (strings, apps_end)."""
+    offset = 8  # past magic(4) + universe(4)
+    while True:
+        appid = struct.unpack_from("<I", buf, offset)[0]
+        offset += 4
+        if appid == 0:
+            break
+        size = struct.unpack_from("<I", buf, offset)[0]
+        offset += 4
+        offset += size
+
+    apps_end = offset
+    count = struct.unpack_from("<I", buf, offset)[0]
+    offset += 4
+    strings = []
+    for _ in range(count):
+        s, offset = _appinfo_read_cstring(buf, offset)
+        strings.append(s)
+    return strings, apps_end
+
+
+def get_names_from_appinfo(app_ids: set[str]) -> dict[str, str]:
+    """Look up display names for the given app IDs from appinfo.vdf. Only
+    apps found in the cache are included in the returned dict."""
+    steam_path = get_steam_path()
+    appinfo_path = os.path.join(steam_path, "appcache", "appinfo.vdf")
+    if not os.path.isfile(appinfo_path):
+        return {}
+
+    try:
+        with open(appinfo_path, "rb") as f:
+            buf = f.read()
+
+        magic = struct.unpack_from("<I", buf, 0)[0]
+        if magic not in _APPINFO_MAGICS:
+            return {}
+
+        strings, apps_end = _appinfo_load_string_table(buf)
+
+        offset = 8
+        wanted = set(app_ids)
+        names: dict[str, str] = {}
+        while offset < apps_end and wanted:
+            appid = struct.unpack_from("<I", buf, offset)[0]
+            offset += 4
+            if appid == 0:
+                break
+            size = struct.unpack_from("<I", buf, offset)[0]
+            offset += 4
+            entry_end = offset + size
+
+            app_id_str = str(appid)
+            if app_id_str in wanted:
+                for header_len in _APPINFO_HEADER_LEN_CANDIDATES:
+                    try:
+                        obj, final_offset = _appinfo_parse_kv_object(
+                            buf, offset + header_len, strings
+                        )
+                        if final_offset != entry_end:
+                            continue
+                        name = obj.get("appinfo", {}).get("common", {}).get("name")
+                        if isinstance(name, str) and name:
+                            names[app_id_str] = name
+                            wanted.discard(app_id_str)
+                        break
+                    except Exception:
+                        continue
+
+            offset = entry_end
+
+        return names
+    except Exception as e:
+        logger.warning(f"Failed to parse appinfo.vdf: {e}")
+        return {}
+
+
+def resolve_missing_names(app_ids: set[str]) -> dict[str, str]:
+    """
+    Resolve display names for non-installed app IDs (which have no
+    appmanifest to read from) via appinfo.vdf, backed by a persistent
+    on-disk cache — names don't change, so once resolved they're cached
+    indefinitely (no TTL, unlike the ProtonDB/HLTB caches).
+    """
+    cache = _load_json("appinfo_names_cache.json", {})
+    missing = {aid for aid in app_ids if aid not in cache}
+    if missing:
+        resolved = get_names_from_appinfo(missing)
+        if resolved:
+            cache.update(resolved)
+            _save_json("appinfo_names_cache.json", cache)
+    return {aid: cache[aid] for aid in app_ids if aid in cache}
+
+
 # ─── Generic JSON persistence helpers ──────────────────────────────────────
 
 def _settings_path(filename: str) -> str:
@@ -601,6 +774,19 @@ class Plugin:
                     "hltb_main_story_hours": hltb_entry["hours"] if hltb_entry else None,
                 })
 
+            # Non-installed games have no appmanifest to read a real name
+            # from (placeholder "App <id>" above) — batch-resolve them all
+            # in one appinfo.vdf pass rather than one file scan per game.
+            missing_name_ids = {
+                g["app_id"] for g in games
+                if not g["is_installed"] and g["name"] == f"App {g['app_id']}"
+            }
+            if missing_name_ids:
+                resolved_names = resolve_missing_names(missing_name_ids)
+                for g in games:
+                    if g["app_id"] in resolved_names:
+                        g["name"] = resolved_names[g["app_id"]]
+
             return games
 
         except Exception as e:
@@ -769,6 +955,17 @@ class Plugin:
                 "remaining_hours": remaining_hours,
                 "reached_estimate": reached_estimate,
             })
+
+        missing_name_ids = {
+            r["app_id"] for r in result
+            if not r["is_installed"] and r["name"] == f"App {r['app_id']}"
+        }
+        if missing_name_ids:
+            resolved_names = resolve_missing_names(missing_name_ids)
+            for r in result:
+                if r["app_id"] in resolved_names:
+                    r["name"] = resolved_names[r["app_id"]]
+
         return result
 
     async def add_to_order(self, app_id: str) -> bool:
