@@ -1,8 +1,8 @@
 """Local preview backend bridge.
 
-Exposes backend/main.py's Plugin methods over a tiny local HTTP JSON-RPC
-endpoint so the browser UI preview (preview/main.tsx via Vite) can drive the
-real backend logic against this machine's real local Steam data.
+Exposes main.py's Plugin methods over a tiny local HTTP JSON-RPC endpoint so
+the browser UI preview (preview/main.tsx via Vite) can drive the real
+backend logic against this machine's real local Steam data.
 
 Not part of the shipped plugin. Development tool only.
 
@@ -18,7 +18,7 @@ import types
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
+sys.path.insert(0, REPO_ROOT)
 
 PORT = 8765
 

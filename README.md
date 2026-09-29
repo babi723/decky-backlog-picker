@@ -71,8 +71,7 @@ Can't decide what to play from your massive Steam backlog? Let **Backlog Picker*
 decky-backlog-picker/
 ├── src/
 │   └── index.tsx          # Main UI (React + TypeScript)
-├── backend/
-│   └── main.py            # Game library reader + randomizer (Python)
+├── main.py                # Game library reader + randomizer (Python) — Decky Loader requires this at plugin root
 ├── plugin.json            # Plugin metadata
 ├── package.json
 └── tsconfig.json

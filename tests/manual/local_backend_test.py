@@ -16,7 +16,7 @@ import tempfile
 import types
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
+sys.path.insert(0, REPO_ROOT)
 
 # ─── Mock the `decky` module (only available inside Decky Loader runtime) ──
 settings_dir = tempfile.mkdtemp(prefix="backlog_picker_test_")
