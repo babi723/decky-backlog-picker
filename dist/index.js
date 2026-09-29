@@ -1,4 +1,4 @@
-const manifest = {"name":"Backlog Picker","version":"1.2.1","author":"babi723","flags":[],"license":"MIT","api_version":1};
+const manifest = {"name":"Backlog Picker","version":"1.2.2","author":"babi723","flags":[],"license":"MIT","api_version":1};
 const API_VERSION = 2;
 const internalAPIConnection = window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit;
 if (!internalAPIConnection) {
@@ -278,7 +278,11 @@ const PickTab = () => {
         max_playtime_hours: 0,
         min_playtime_hours: 0,
         blacklist: [],
-        proton_filter: "gold_plus",
+        // Default to "any": ProtonDB may not be reachable on every network, and
+        // an empty/unreachable cache would otherwise make Gold+ show a
+        // confusing "0 games in pool" with no explanation. Gold+/Platinum
+        // remain one dropdown selection away once the cache is warm.
+        proton_filter: "any",
         collection_id: null,
     });
     const [pickedGame, setPickedGame] = SP_REACT.useState(null);
@@ -299,19 +303,25 @@ const PickTab = () => {
     SP_REACT.useEffect(() => {
         let cancelled = false;
         (async () => {
-            const pool = await getLibrary({
-                installed_only: true,
-                never_played: false,
-                max_playtime_hours: 0,
-                min_playtime_hours: 0,
-                blacklist: [],
-                proton_filter: "any",
-            });
-            if (cancelled || pool.length === 0)
-                return;
-            await refreshMetadata(pool.map((g) => g.app_id));
-            if (!cancelled)
-                setFilters((f) => ({ ...f }));
+            try {
+                const pool = await getLibrary({
+                    installed_only: true,
+                    never_played: false,
+                    max_playtime_hours: 0,
+                    min_playtime_hours: 0,
+                    blacklist: [],
+                    proton_filter: "any",
+                });
+                if (cancelled || pool.length === 0)
+                    return;
+                await refreshMetadata(pool.map((g) => g.app_id));
+                if (!cancelled)
+                    setFilters((f) => ({ ...f }));
+            }
+            catch (e) {
+                // eslint-disable-next-line no-console
+                console.error("[Backlog Picker] ProtonDB warm-up failed:", e);
+            }
         })();
         return () => { cancelled = true; };
     }, []);
