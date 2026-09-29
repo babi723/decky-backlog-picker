@@ -1,4 +1,4 @@
-var BacklogPicker = (function (React, ui, _manifest) {
+var BacklogPicker = (function (React, ui) {
 	'use strict';
 
 	var jsxRuntime = {exports: {}};
@@ -128,11 +128,10 @@ var BacklogPicker = (function (React, ui, _manifest) {
 
 	var jsxRuntimeExports = jsxRuntime.exports;
 
+	var _manifest = {"name":"Backlog Picker"};
+
 	const manifest = _manifest;
 	const API_VERSION = 2;
-	if (!manifest?.name) {
-	    throw new Error('[@decky/api]: Failed to find plugin manifest.');
-	}
 	const internalAPIConnection = window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit;
 	if (!internalAPIConnection) {
 	    throw new Error('[@decky/api]: Failed to connect to the loader as as the loader API was not initialized. This is likely a bug in Decky Loader.');
@@ -744,4 +743,4 @@ var BacklogPicker = (function (React, ui, _manifest) {
 
 	return index;
 
-})(SP_REACT, DFL, DeckyPluginManifest);
+})(SP_REACT, DFL);
