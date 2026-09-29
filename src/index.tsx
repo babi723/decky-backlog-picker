@@ -7,12 +7,12 @@ import {
   SliderField,
   DropdownItem,
   Focusable,
-  DialogButton,
+  Tabs,
   staticClasses,
 } from "@decky/ui";
 import { callable, toaster } from "@decky/api";
-import { useState, useEffect, useCallback, useMemo, FC, ReactNode } from "react";
-import { FaDice, FaBan, FaPlay, FaSteam, FaListUl, FaSortAmountDown, FaArrowUp, FaArrowDown, FaCheck, FaClock } from "react-icons/fa";
+import { useState, useEffect, useCallback, useMemo, FC } from "react";
+import { FaDice, FaBan, FaPlay, FaSteam, FaSortAmountDown, FaArrowUp, FaArrowDown, FaCheck, FaClock } from "react-icons/fa";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -201,44 +201,6 @@ const SpinningDice: FC<{ spinning: boolean }> = ({ spinning }) => (
 
 type Tab = "pick" | "library" | "order";
 
-const TabNav: FC<{ active: Tab; onChange: (t: Tab) => void }> = ({ active, onChange }) => {
-  const tabs: { id: Tab; label: string; icon: ReactNode }[] = [
-    { id: "pick", label: "Pick", icon: <FaDice /> },
-    { id: "library", label: "Library", icon: <FaListUl /> },
-    { id: "order", label: "Order", icon: <FaSortAmountDown /> },
-  ];
-  return (
-    <Focusable
-      style={{
-        display: "flex",
-        gap: "6px",
-        padding: "0 4px 8px 4px",
-      }}
-      flow-children="horizontal"
-    >
-      {tabs.map((t) => (
-        <DialogButton
-          key={t.id}
-          onClick={() => onChange(t.id)}
-          style={{
-            flex: 1,
-            textAlign: "center",
-            padding: "10px 4px",
-            borderRadius: "6px",
-            fontSize: "12px",
-            fontWeight: "bold",
-            background: active === t.id ? "#66c0f4" : "#2a2f37",
-            color: active === t.id ? "#0e141b" : "#c6d4df",
-          }}
-        >
-          <div style={{ fontSize: "14px", marginBottom: "2px" }}>{t.icon}</div>
-          {t.label}
-        </DialogButton>
-      ))}
-    </Focusable>
-  );
-};
-
 // ─── Picked game card ─────────────────────────────────────────────────────────
 
 const GameCard: FC<{
@@ -395,6 +357,28 @@ const PickTab: FC = () => {
       setFilters((f) => ({ ...f, blacklist: bl }));
     });
     getCollections().then(setCollections);
+  }, []);
+
+  // Warm the ProtonDB cache once on mount so the default "Gold+" filter
+  // doesn't show "0 games in pool" before anything's been checked — the
+  // pool used for warming ignores proton_filter itself (nothing would be
+  // in it to warm otherwise), then the filtered count effect below re-runs.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const pool = await getLibrary({
+        installed_only: true,
+        never_played: false,
+        max_playtime_hours: 0,
+        min_playtime_hours: 0,
+        blacklist: [],
+        proton_filter: "any",
+      });
+      if (cancelled || pool.length === 0) return;
+      await refreshMetadata(pool.map((g) => g.app_id));
+      if (!cancelled) setFilters((f) => ({ ...f }));
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   // Refresh library count when filters change
@@ -1054,12 +1038,15 @@ const Content: FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("pick");
 
   return (
-    <div>
-      <TabNav active={activeTab} onChange={setActiveTab} />
-      {activeTab === "pick" && <PickTab />}
-      {activeTab === "library" && <LibraryTab />}
-      {activeTab === "order" && <OrderTab />}
-    </div>
+    <Tabs
+      activeTab={activeTab}
+      onShowTab={(tabId: string) => setActiveTab(tabId as Tab)}
+      tabs={[
+        { id: "pick", title: "Pick", content: <PickTab /> },
+        { id: "library", title: "Library", content: <LibraryTab /> },
+        { id: "order", title: "Order", content: <OrderTab /> },
+      ]}
+    />
   );
 };
 

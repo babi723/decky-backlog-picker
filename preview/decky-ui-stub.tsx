@@ -11,6 +11,46 @@ export const staticClasses = { Title: "preview-title" };
 
 export const definePlugin = (fn: any) => fn;
 
+// Real @decky/ui's Tabs is pulled from Steam's own webpack module at runtime
+// (its actual controller/focus behavior can't be approximated in a browser
+// preview at all) — this stub only reproduces the header + content-switch
+// logic for layout/logic testing.
+export interface StubTab {
+  id: string;
+  title: string;
+  content: ReactNode;
+}
+export const Tabs: FC<{ tabs: StubTab[]; activeTab: string; onShowTab: (id: string) => void }> = ({
+  tabs,
+  activeTab,
+  onShowTab,
+}) => (
+  <div>
+    <div style={{ display: "flex", gap: "6px", padding: "0 4px 8px 4px" }}>
+      {tabs.map((t) => (
+        <button
+          key={t.id}
+          onClick={() => onShowTab(t.id)}
+          style={{
+            flex: 1,
+            padding: "10px 4px",
+            borderRadius: "6px",
+            border: "1px solid #3a4450",
+            fontSize: "12px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            background: activeTab === t.id ? "#66c0f4" : "#2a2f37",
+            color: activeTab === t.id ? "#0e141b" : "#c6d4df",
+          }}
+        >
+          {t.title}
+        </button>
+      ))}
+    </div>
+    {tabs.find((t) => t.id === activeTab)?.content}
+  </div>
+);
+
 export const PanelSection: FC<{ title?: ReactNode; children?: ReactNode }> = ({ title, children }) => (
   <div style={{ marginBottom: "12px" }}>
     {title && (
