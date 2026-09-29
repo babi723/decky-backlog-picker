@@ -211,14 +211,30 @@ const SECTION_OPTIONS: { data: Tab; label: string }[] = [
 // through the 3 options — simpler than left/right-flowing through a
 // horizontal button row, and matches the same component already used for
 // the ProtonDB/Collection filters elsewhere in this plugin.
+// Both the native Tabs component and DropdownItem (v1.2.0/v1.2.4) behaved
+// unreliably here — both are pulled dynamically from Steam's own internal
+// webpack modules and may expect a surrounding page/router context a
+// Decky plugin's plain sidebar content div doesn't provide. Falling back
+// to plain ButtonItem — the one component type used everywhere else in
+// this plugin (Play Now, Reroll, Move Up/Down, etc.) without issue.
 const TabNav: FC<{ active: Tab; onChange: (t: Tab) => void }> = ({ active, onChange }) => (
-  <PanelSectionRow>
-    <DropdownItem
-      rgOptions={SECTION_OPTIONS}
-      selectedOption={active}
-      onChange={(o) => onChange(o.data)}
-    />
-  </PanelSectionRow>
+  <>
+    {SECTION_OPTIONS.map((section) => (
+      <PanelSectionRow key={section.data}>
+        <ButtonItem
+          layout="below"
+          onClick={() => onChange(section.data)}
+          style={{
+            background: active === section.data ? "#66c0f4" : undefined,
+            color: active === section.data ? "#0e141b" : undefined,
+            fontWeight: active === section.data ? "bold" : undefined,
+          }}
+        >
+          {section.label}
+        </ButtonItem>
+      </PanelSectionRow>
+    ))}
+  </>
 );
 
 // ─── Picked game card ─────────────────────────────────────────────────────────

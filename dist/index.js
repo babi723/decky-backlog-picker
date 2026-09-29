@@ -1,4 +1,4 @@
-const manifest = {"name":"Backlog Picker","version":"1.2.4","author":"babi723","flags":[],"license":"MIT","api_version":1};
+const manifest = {"name":"Backlog Picker","version":"1.2.5","author":"babi723","flags":[],"license":"MIT","api_version":1};
 const API_VERSION = 2;
 const internalAPIConnection = window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit;
 if (!internalAPIConnection) {
@@ -215,7 +215,17 @@ const SECTION_OPTIONS = [
 // through the 3 options — simpler than left/right-flowing through a
 // horizontal button row, and matches the same component already used for
 // the ProtonDB/Collection filters elsewhere in this plugin.
-const TabNav = ({ active, onChange }) => (SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.DropdownItem, { rgOptions: SECTION_OPTIONS, selectedOption: active, onChange: (o) => onChange(o.data) }) }));
+// Both the native Tabs component and DropdownItem (v1.2.0/v1.2.4) behaved
+// unreliably here — both are pulled dynamically from Steam's own internal
+// webpack modules and may expect a surrounding page/router context a
+// Decky plugin's plain sidebar content div doesn't provide. Falling back
+// to plain ButtonItem — the one component type used everywhere else in
+// this plugin (Play Now, Reroll, Move Up/Down, etc.) without issue.
+const TabNav = ({ active, onChange }) => (SP_JSX.jsx(SP_JSX.Fragment, { children: SECTION_OPTIONS.map((section) => (SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.ButtonItem, { layout: "below", onClick: () => onChange(section.data), style: {
+                background: active === section.data ? "#66c0f4" : undefined,
+                color: active === section.data ? "#0e141b" : undefined,
+                fontWeight: active === section.data ? "bold" : undefined,
+            }, children: section.label }) }, section.data))) }));
 // ─── Picked game card ─────────────────────────────────────────────────────────
 const GameCard = ({ game, onReroll, onLaunch, onBlacklist, onAddToOrder, loading }) => (SP_JSX.jsxs("div", { style: { marginTop: "8px" }, children: [SP_JSX.jsx("div", { style: {
                 position: "relative",
