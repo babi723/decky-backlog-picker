@@ -1,6 +1,6 @@
 {
       "name": "decky-backlog-picker",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Can't decide what to play? Let the Backlog Picker choose for you.",
       "scripts": {
             "build": "rollup -c",
