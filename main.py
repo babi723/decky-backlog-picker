@@ -301,6 +301,23 @@ def get_game_name_from_manifest(app_id: str) -> str | None:
     return None
 
 
+# Steam compatibility tools/runtimes (Proton, Steam Linux Runtime, etc.) get
+# their own appmanifest_*.acf just like real games, so installed-app
+# detection picks them up too. Filtering by app ID is unreliable since new
+# Proton versions ship regularly with new IDs — match by name prefix
+# instead, since Valve keeps these names consistent across versions.
+_NON_GAME_NAME_PREFIXES = (
+    "Proton",
+    "Steam Linux Runtime",
+    "SteamVR",
+    "Steamworks Common Redistributables",
+)
+
+
+def is_non_game_tool(name: str) -> bool:
+    return any(name.startswith(prefix) for prefix in _NON_GAME_NAME_PREFIXES)
+
+
 # ─── Generic JSON persistence helpers ──────────────────────────────────────
 
 def _settings_path(filename: str) -> str:
@@ -566,6 +583,8 @@ class Plugin:
                 name = get_game_name_from_manifest(app_id) if is_installed else None
                 if not name:
                     name = f"App {app_id}"
+                if is_non_game_tool(name):
+                    continue
 
                 hltb_entry = _get_cached_hltb(app_id, hltb_cache)
 
