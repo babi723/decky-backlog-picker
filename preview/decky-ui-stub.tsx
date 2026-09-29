@@ -55,6 +55,11 @@ export const ButtonItem: FC<{
   </button>
 );
 
+// Real @decky/ui DialogButton is a lower-level focusable button (no
+// PanelSectionRow wrapper needed); the stub styling is close enough to
+// ButtonItem's for local layout/logic preview purposes.
+export const DialogButton = ButtonItem;
+
 export const ToggleField: FC<{
   label: ReactNode;
   description?: ReactNode;

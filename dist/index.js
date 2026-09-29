@@ -361,14 +361,13 @@ var BacklogPicker = (function (React, ui, _manifest) {
 	            display: "flex",
 	            gap: "6px",
 	            padding: "0 4px 8px 4px",
-	        }, "flow-children": "horizontal", children: tabs.map((t) => (jsxRuntimeExports.jsxs("div", { onClick: () => onChange(t.id), style: {
+	        }, "flow-children": "horizontal", children: tabs.map((t) => (jsxRuntimeExports.jsxs(ui.DialogButton, { onClick: () => onChange(t.id), style: {
 	                flex: 1,
 	                textAlign: "center",
 	                padding: "10px 4px",
 	                borderRadius: "6px",
 	                fontSize: "12px",
 	                fontWeight: "bold",
-	                cursor: "pointer",
 	                background: active === t.id ? "#66c0f4" : "#2a2f37",
 	                color: active === t.id ? "#0e141b" : "#c6d4df",
 	            }, children: [jsxRuntimeExports.jsx("div", { style: { fontSize: "14px", marginBottom: "2px" }, children: t.icon }), t.label] }, t.id))) }));

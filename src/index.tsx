@@ -7,6 +7,7 @@ import {
   SliderField,
   DropdownItem,
   Focusable,
+  DialogButton,
   staticClasses,
 } from "@decky/ui";
 import { callable, toaster } from "@decky/api";
@@ -216,7 +217,7 @@ const TabNav: FC<{ active: Tab; onChange: (t: Tab) => void }> = ({ active, onCha
       flow-children="horizontal"
     >
       {tabs.map((t) => (
-        <div
+        <DialogButton
           key={t.id}
           onClick={() => onChange(t.id)}
           style={{
@@ -226,14 +227,13 @@ const TabNav: FC<{ active: Tab; onChange: (t: Tab) => void }> = ({ active, onCha
             borderRadius: "6px",
             fontSize: "12px",
             fontWeight: "bold",
-            cursor: "pointer",
             background: active === t.id ? "#66c0f4" : "#2a2f37",
             color: active === t.id ? "#0e141b" : "#c6d4df",
           }}
         >
           <div style={{ fontSize: "14px", marginBottom: "2px" }}>{t.icon}</div>
           {t.label}
-        </div>
+        </DialogButton>
       ))}
     </Focusable>
   );
