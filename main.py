@@ -491,6 +491,10 @@ class Plugin:
         try:
             steam_id = get_steam_id()
             installed_ids = get_installed_app_ids()
+            logger.info(
+                f"get_library: steam_path={get_steam_path()!r} steam_id={steam_id!r} "
+                f"installed_count={len(installed_ids)} filters={filters}"
+            )
             playtimes = parse_localconfig_playtimes(steam_id) if steam_id else {}
             protondb_cache = _load_json("protondb_cache.json", {})
             hltb_cache = _load_json("hltb_cache.json", {})
@@ -825,7 +829,13 @@ class Plugin:
 
     async def _main(self):
         """Called on plugin load."""
-        logger.info("Backlog Picker loaded.")
+        steam_path = get_steam_path()
+        installed_ids = get_installed_app_ids()
+        logger.info(
+            f"Backlog Picker loaded. steam_path={steam_path!r} "
+            f"(exists={os.path.isdir(steam_path)}) steam_id={get_steam_id()!r} "
+            f"installed_count={len(installed_ids)}"
+        )
 
     async def _unload(self):
         """Called on plugin unload."""
