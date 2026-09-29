@@ -41,11 +41,12 @@ export default {
                         "process.env.NODE_ENV": JSON.stringify("production"),
               }),
             ],
-      external: ["react", "react-dom", "@decky/ui"],
+      external: ["react", "react/jsx-runtime", "react-dom", "@decky/ui"],
       output: {
               file: "dist/index.js",
               globals: {
                         react: "SP_REACT",
+                        "react/jsx-runtime": "SP_JSX",
                         "react-dom": "SP_REACTDOM",
                         "@decky/ui": "DFL",
               },
