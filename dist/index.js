@@ -1,4 +1,4 @@
-const manifest = {"name":"Backlog Picker","version":"1.1.3","author":"babi723","flags":[],"license":"MIT","api_version":1};
+const manifest = {"name":"Backlog Picker","version":"1.1.4","author":"babi723","flags":[],"license":"MIT","api_version":1};
 const API_VERSION = 2;
 const internalAPIConnection = window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit;
 if (!internalAPIConnection) {
