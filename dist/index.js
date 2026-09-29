@@ -1,4 +1,4 @@
-const manifest = {"name":"Backlog Picker","version":"1.2.3","author":"babi723","flags":[],"license":"MIT","api_version":1};
+const manifest = {"name":"Backlog Picker","version":"1.2.4","author":"babi723","flags":[],"license":"MIT","api_version":1};
 const API_VERSION = 2;
 const internalAPIConnection = window.__DECKY_SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED_deckyLoaderAPIInit;
 if (!internalAPIConnection) {
@@ -82,8 +82,6 @@ function FaSteam (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M304 416h-64a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h64a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm-128-64h-48V48a16 16 0 0 0-16-16H80a16 16 0 0 0-16 16v304H16c-14.19 0-21.37 17.24-11.29 27.31l80 96a16 16 0 0 0 22.62 0l80-96C197.35 369.26 190.22 352 176 352zm256-192H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h192a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm-64 128H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zM496 32H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h256a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"},"child":[]}]})(props);
 }function FaPlay (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"},"child":[]}]})(props);
-}function FaListUl (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M48 48a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm0 160a48 48 0 1 0 48 48 48 48 0 0 0-48-48zm448 16H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16z"},"child":[]}]})(props);
 }function FaDice (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 640 512"},"child":[{"tag":"path","attr":{"d":"M592 192H473.26c12.69 29.59 7.12 65.2-17 89.32L320 417.58V464c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48V240c0-26.51-21.49-48-48-48zM480 376c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm-46.37-186.7L258.7 14.37c-19.16-19.16-50.23-19.16-69.39 0L14.37 189.3c-19.16 19.16-19.16 50.23 0 69.39L189.3 433.63c19.16 19.16 50.23 19.16 69.39 0L433.63 258.7c19.16-19.17 19.16-50.24 0-69.4zM96 248c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm128 128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm0-128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm0-128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24zm128 128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"},"child":[]}]})(props);
 }function FaClock (props) {
@@ -207,27 +205,17 @@ const SpinningDice = ({ spinning }) => (SP_JSX.jsxs("div", { style: {
         to { transform: rotate(360deg); }
       }
     ` })] }));
-const TabNav = ({ active, onChange }) => {
-    const tabs = [
-        { id: "pick", label: "Pick", icon: SP_JSX.jsx(FaDice, {}) },
-        { id: "library", label: "Library", icon: SP_JSX.jsx(FaListUl, {}) },
-        { id: "order", label: "Order", icon: SP_JSX.jsx(FaSortAmountDown, {}) },
-    ];
-    return (SP_JSX.jsx(DFL.Focusable, { style: {
-            display: "flex",
-            gap: "6px",
-            padding: "0 4px 8px 4px",
-        }, "flow-children": "horizontal", children: tabs.map((t) => (SP_JSX.jsxs(DFL.DialogButton, { onClick: () => onChange(t.id), style: {
-                flex: 1,
-                textAlign: "center",
-                padding: "10px 4px",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: "bold",
-                background: active === t.id ? "#66c0f4" : "#2a2f37",
-                color: active === t.id ? "#0e141b" : "#c6d4df",
-            }, children: [SP_JSX.jsx("div", { style: { fontSize: "14px", marginBottom: "2px" }, children: t.icon }), t.label] }, t.id))) }));
-};
+const SECTION_OPTIONS = [
+    { data: "pick", label: "Pick" },
+    { data: "library", label: "Library" },
+    { data: "order", label: "Order" },
+];
+// A single DropdownItem instead of a row of side-by-side buttons: one
+// focusable element to reach with the controller, then D-pad up/down
+// through the 3 options — simpler than left/right-flowing through a
+// horizontal button row, and matches the same component already used for
+// the ProtonDB/Collection filters elsewhere in this plugin.
+const TabNav = ({ active, onChange }) => (SP_JSX.jsx(DFL.PanelSectionRow, { children: SP_JSX.jsx(DFL.DropdownItem, { rgOptions: SECTION_OPTIONS, selectedOption: active, onChange: (o) => onChange(o.data) }) }));
 // ─── Picked game card ─────────────────────────────────────────────────────────
 const GameCard = ({ game, onReroll, onLaunch, onBlacklist, onAddToOrder, loading }) => (SP_JSX.jsxs("div", { style: { marginTop: "8px" }, children: [SP_JSX.jsx("div", { style: {
                 position: "relative",

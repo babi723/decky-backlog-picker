@@ -7,12 +7,11 @@ import {
   SliderField,
   DropdownItem,
   Focusable,
-  DialogButton,
   staticClasses,
 } from "@decky/ui";
 import { callable, toaster } from "@decky/api";
-import { useState, useEffect, useCallback, useMemo, FC, ReactNode } from "react";
-import { FaDice, FaBan, FaPlay, FaSteam, FaListUl, FaSortAmountDown, FaArrowUp, FaArrowDown, FaCheck, FaClock } from "react-icons/fa";
+import { useState, useEffect, useCallback, useMemo, FC } from "react";
+import { FaDice, FaBan, FaPlay, FaSteam, FaSortAmountDown, FaArrowUp, FaArrowDown, FaCheck, FaClock } from "react-icons/fa";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -201,43 +200,26 @@ const SpinningDice: FC<{ spinning: boolean }> = ({ spinning }) => (
 
 type Tab = "pick" | "library" | "order";
 
-const TabNav: FC<{ active: Tab; onChange: (t: Tab) => void }> = ({ active, onChange }) => {
-  const tabs: { id: Tab; label: string; icon: ReactNode }[] = [
-    { id: "pick", label: "Pick", icon: <FaDice /> },
-    { id: "library", label: "Library", icon: <FaListUl /> },
-    { id: "order", label: "Order", icon: <FaSortAmountDown /> },
-  ];
-  return (
-    <Focusable
-      style={{
-        display: "flex",
-        gap: "6px",
-        padding: "0 4px 8px 4px",
-      }}
-      flow-children="horizontal"
-    >
-      {tabs.map((t) => (
-        <DialogButton
-          key={t.id}
-          onClick={() => onChange(t.id)}
-          style={{
-            flex: 1,
-            textAlign: "center",
-            padding: "10px 4px",
-            borderRadius: "6px",
-            fontSize: "12px",
-            fontWeight: "bold",
-            background: active === t.id ? "#66c0f4" : "#2a2f37",
-            color: active === t.id ? "#0e141b" : "#c6d4df",
-          }}
-        >
-          <div style={{ fontSize: "14px", marginBottom: "2px" }}>{t.icon}</div>
-          {t.label}
-        </DialogButton>
-      ))}
-    </Focusable>
-  );
-};
+const SECTION_OPTIONS: { data: Tab; label: string }[] = [
+  { data: "pick", label: "Pick" },
+  { data: "library", label: "Library" },
+  { data: "order", label: "Order" },
+];
+
+// A single DropdownItem instead of a row of side-by-side buttons: one
+// focusable element to reach with the controller, then D-pad up/down
+// through the 3 options — simpler than left/right-flowing through a
+// horizontal button row, and matches the same component already used for
+// the ProtonDB/Collection filters elsewhere in this plugin.
+const TabNav: FC<{ active: Tab; onChange: (t: Tab) => void }> = ({ active, onChange }) => (
+  <PanelSectionRow>
+    <DropdownItem
+      rgOptions={SECTION_OPTIONS}
+      selectedOption={active}
+      onChange={(o) => onChange(o.data)}
+    />
+  </PanelSectionRow>
+);
 
 // ─── Picked game card ─────────────────────────────────────────────────────────
 
